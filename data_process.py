@@ -69,4 +69,9 @@ def process_data(args):
   train_dataset = train_dataset.prefetch(BATCH_SIZE)
   val_dataset = val_examples.padded_batch(len(val_dataset))
   test_dataset = test_examples.padded_batch(len(dftest))
+
+  print(dftrain.head())
+  print(next(iter(train_dataset)))
+  print(next(iter(val_dataset)))
+  print(next(iter(test_dataset)))
   return (train_dataset, val_dataset, test_dataset), t
