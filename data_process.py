@@ -30,6 +30,7 @@ def proc_data(args, df):
 
 def process_data(args):
   df_train = pd.read_csv(os.path.join(args.data_path_train), index_col = 0)
+  print(df_train.head())
   df_test = pd.read_csv(os.path.join(args.data_path_test),index_col = 0)
   #df_nonce = pd.read_csv(os.path.join(args.data_path_nonce), index_col = 0)
   df_train = proc_df(args, df_train)
@@ -70,8 +71,10 @@ def process_data(args):
   val_dataset = val_examples.padded_batch(len(val_dataset))
   test_dataset = test_examples.padded_batch(len(dftest))
 
-  print(dftrain.head())
+  print(df_train.head())
   print(next(iter(train_dataset)))
   print(next(iter(val_dataset)))
   print(next(iter(test_dataset)))
   return (train_dataset, val_dataset, test_dataset), t
+
+
