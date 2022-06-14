@@ -11,11 +11,16 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 
 
 
+<<<<<<< HEAD
 print('Process Data')
+=======
+print('Hello')
+>>>>>>> 614678e8b1d01d40024a25077b3a15d71995f9f5
 def to_char(row,col):
   return ",".join(row[col])
   
 def proc_data(args, df):
+<<<<<<< HEAD
     if args.label_spec == 'reg':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
         df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + df['reg'] + ',' + 'END'
@@ -50,19 +55,66 @@ def proc_data_nonce(args, df):
             
     return df
 def process_data(args):
+=======
+    if args.label_pos == 'input':
+        if args.label_spec == 'reg':
+            df['root'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_root'), axis = 1) + ',' + df['reg'] + ',' + 'END'
+            df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END'
+        elif args.label_spec == 'vc':
+            df['root'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_root'), axis = 1) + ',' + df['verb class'] + ',' + 'END'
+            df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END'
+        elif args.label_spec == 'both':
+            df['root'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_root'), axis = 1) + ',' + df['reg'] + ',' + df['verb class'] + ',' + 'END'
+            df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END'
+        elif args.label_spec == 'no':
+            df['root'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_root'), axis = 1) + ',' + 'END' 
+            df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END' 
+        else:
+            raise ValueError('Give me label_spec')
+    elif args.label_pos == 'output':
+        if args.label_spec == 'reg':
+            df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
+            df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + df['reg'] + ',' + 'END'
+        elif args.label_spec == 'vc':
+            df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
+            df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + df['verb class'] + ',' + 'END'
+        elif args.label_spec == 'both':
+            df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
+            df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + df['reg'] + ',' + df['vc'] + ',' + 'END'
+        elif args.label_spec == 'no':
+            df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
+            df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END'
+        else:
+            raise ValueError ('Give me label_spec')
+    else:
+        raise ValueError ('Give me label_pos')
+            
+    return df
+
+def process_data(args):
+<<<<<<< HEAD
+>>>>>>> 614678e8b1d01d40024a25077b3a15d71995f9f5
     df_train = pd.read_csv(os.path.join(args.data_path_train), index_col = 0)
     df_test = pd.read_csv(os.path.join(args.data_path_test),index_col = 0)
     df_nonce = pd.read_csv(os.path.join(args.data_path_nonce), index_col = 0)
     df_train = proc_data(args, df_train)
     df_test = proc_data(args, df_test)
+<<<<<<< HEAD
     df_nonce = proc_data_nonce(args, df_nonce)
+=======
+    df_nonce = proc_data(args, df_nonce)
+>>>>>>> 614678e8b1d01d40024a25077b3a15d71995f9f5
     df_train['label'] = df_train['reg']
     df_test['label'] = df_test['reg']
     root_train, root_val, label_train, label_val, verb_train, verb_val = train_test_split(
       df_train['root'].values, df_train['label'].values, df_train['verb'].values, 
       test_size = 0.1, stratify=df_train[['label']], random_state=args.seed)
     t = Tokenizer(split = ',', filters = '!')
+<<<<<<< HEAD
     t.fit_on_texts(verb_train)
+=======
+    t.fit_on_texts(root_train)
+>>>>>>> 614678e8b1d01d40024a25077b3a15d71995f9f5
     total_words = len(t.word_counts) + 1
     root_seq_train = t.texts_to_sequences(root_train)
     root_seq_val = t.texts_to_sequences(root_val)
@@ -81,17 +133,56 @@ def process_data(args):
     verb_pad_test = pad_sequences(verb_seq_test, maxlen=MAX_LEN, padding = 'post')
     root_pad_nonce = pad_sequences(root_seq_nonce, maxlen = MAX_LEN, padding = 'post')
     verb_pad_nonce = pad_sequences(verb_seq_nonce, maxlen = MAX_LEN, padding = 'post')
+<<<<<<< HEAD
  
+=======
+>>>>>>> 614678e8b1d01d40024a25077b3a15d71995f9f5
     train_examples = tf.data.Dataset.from_tensor_slices({"input_seq":(
                                                          tf.cast(np.asarray(root_pad_train), tf.int64), 
                                                          tf.cast(np.asarray(verb_pad_train), tf.int64)
                                                          ), 
+<<<<<<< HEAD
+=======
+=======
+  df_train = pd.read_csv(os.path.join(args.data_path_train), index_col = 0)
+  print(df_train.head())
+  df_test = pd.read_csv(os.path.join(args.data_path_test),index_col = 0)
+  #df_nonce = pd.read_csv(os.path.join(args.data_path_nonce), index_col = 0)
+  df_train = proc_df(args, df_train)
+  df_test = proc_df(args, df_test)
+  root_train, root_val, label_train, label_val, verb_train, verb_val = train_test_split(
+      dftrain['ipa_root'].values, dftrain['reg'].values, dftrain['ipa_verb'].values, test_size = 0.1, stratify=dftrain[['reg']], random_state=args.seed)
+  t = Tokenizer(char_level=True)
+  t.fit_on_texts(root_train + verb_train)
+  total_words = len(t.word_counts)
+  t.num_words = total_words +2
+  root_seq_train = t.texts_to_sequences(root_train)
+  root_seq_val = t.texts_to_sequences(root_val)
+  verb_seq_train = t.texts_to_sequences(verb_train)
+  verb_seq_val = t.texts_to_sequences(verb_val)
+  verb_seq_test = t.texts_to_sequences(dftest['ipa_verb'].values)
+  root_seq_test = t.texts_to_sequences(dftest['ipa_root'].values)
+  MAX_LEN = max(len(i) for i in root_seq_train + root_seq_val + verb_seq_train+verb_seq_val+verb_seq_test)
+  root_pad_train = pad_sequences(root_seq_train, maxlen=MAX_LEN, padding = 'post')
+  root_pad_val = pad_sequences(root_seq_val, maxlen=MAX_LEN, padding = 'post')
+  verb_pad_train = pad_sequences(verb_seq_train, maxlen=MAX_LEN, padding = 'post')
+  verb_pad_val = pad_sequences(verb_seq_val, maxlen=MAX_LEN, padding = 'post')
+  root_pad_test = pad_sequences(root_seq_test, maxlen=MAX_LEN, padding = 'post')
+  verb_pad_test = pad_sequences(verb_seq_test, maxlen=MAX_LEN, padding = 'post')
+  train_examples = tf.data.Dataset.from_tensor_slices({"input_seq":(tf.cast(np.asarray(root_pad_train), tf.int64), 
+                                                         tf.cast(np.asarray(verb_pad_train), tf.int64)), 
+>>>>>>> d32ae9a63eaf3c5f198ebfecdb9b655975689908
+>>>>>>> 614678e8b1d01d40024a25077b3a15d71995f9f5
                                                      "label": label_train})
     val_examples = tf.data.Dataset.from_tensor_slices({"input_seq":(tf.cast(np.array(root_pad_val), tf.int64), 
                                                        tf.cast(np.array(verb_pad_val), tf.int64)), 
                                                    "label": label_val})
     test_examples = tf.data.Dataset.from_tensor_slices({"input_seq":(tf.cast(np.array(root_pad_test), tf.int64), 
                                                        tf.cast(np.array(verb_pad_test), tf.int64)),
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 614678e8b1d01d40024a25077b3a15d71995f9f5
                                                     "label":df_test['label'].values})
     nonce_examples = tf.data.Dataset.from_tensor_slices((tf.cast(np.array(root_pad_nonce), tf.int64), 
                                                        tf.cast(np.array(verb_pad_nonce), tf.int64)))
@@ -101,8 +192,38 @@ def process_data(args):
     train_dataset = train_examples.cache()
     train_dataset = train_dataset.shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
     train_dataset = train_dataset.prefetch(BATCH_SIZE)
+<<<<<<< HEAD
     val_dataset = val_examples.padded_batch(BATCH_SIZE)
     test_dataset = test_examples.padded_batch(len(test_examples))
     nonce_dataset = nonce_examples.padded_batch(len(nonce_examples))
     return (train_dataset, val_dataset, test_dataset, nonce_dataset), t
     
+=======
+    if len(val_examples) < 500:
+        val_dataset = val_examples.padded_batch(len(val_examples))
+    else:
+        val_dataset = val_examples.padded_batch(BATCH_SIZE)
+    val_dataset_eval = val_examples.padded_batch(len(val_examples))
+    test_dataset = test_examples.padded_batch(len(test_examples))
+    nonce_dataset = nonce_examples.padded_batch(len(nonce_examples))
+    return (train_dataset, val_dataset, val_dataset_eval, test_dataset, nonce_dataset), t
+    
+=======
+                                                    "label":dftest['reg'].values})
+  BUFFER_SIZE = 60
+  BATCH_SIZE = 32
+  train_dataset = train_examples.cache()
+  train_dataset = train_dataset.shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
+  train_dataset = train_dataset.prefetch(BATCH_SIZE)
+  val_dataset = val_examples.padded_batch(len(val_dataset))
+  test_dataset = test_examples.padded_batch(len(dftest))
+
+  print(df_train.head())
+  print(next(iter(train_dataset)))
+  print(next(iter(val_dataset)))
+  print(next(iter(test_dataset)))
+  return (train_dataset, val_dataset, test_dataset), t
+
+
+>>>>>>> d32ae9a63eaf3c5f198ebfecdb9b655975689908
+>>>>>>> 614678e8b1d01d40024a25077b3a15d71995f9f5
