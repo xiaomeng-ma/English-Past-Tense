@@ -58,87 +58,87 @@
 ### Type_parent
 
 
-!python copy_train-test.py -seed 42 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 42 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 100
 
-!python copy_train-test.py -seed 88 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 88 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 100
 
-!python copy_train-test.py -seed 266 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 266 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 100
 
-!python copy_train-test.py -seed 24 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 24 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 100
 
-!python copy_train-test.py -seed 144 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 144 -data_path_train Data/Training/Type_parent.csv -label_spec 'both' -EPOCHS 100
 
-!python copy_train-test.py -seed 42 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 42 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 100
 
-!python copy_train-test.py -seed 88 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 88 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 100
 
-!python copy_train-test.py -seed 266 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 266 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 100
 
-!python copy_train-test.py -seed 24 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 24 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 100
 
-!python copy_train-test.py -seed 144 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 144 -data_path_train Data/Training/Type_parent.csv -label_spec 'no' -EPOCHS 100
 
-!python copy_train-test.py -seed 42 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 42 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 100
 
-!python copy_train-test.py -seed 88 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 88 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 100
 
-!python copy_train-test.py -seed 266 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 266 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 100
 
-!python copy_train-test.py -seed 24 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 24 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 100
 
-!python copy_train-test.py -seed 144 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 144 -data_path_train Data/Training/Type_parent.csv -label_spec 'reg' -EPOCHS 100
 
-!python copy_train-test.py -seed 42 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 42 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 100
 
-!python copy_train-test.py -seed 88 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 88 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 100
 
-!python copy_train-test.py -seed 266 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 266 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 100
 
-!python copy_train-test.py -seed 24 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 24 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 100
 
-!python copy_train-test.py -seed 144 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 144 -data_path_train Data/Training/Type_parent.csv -label_spec 'vc' -EPOCHS 100
 
 ### Token Parent
 
-!python copy_train-test.py -seed 42 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 42 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 20
 
-!python copy_train-test.py -seed 88 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 88 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 20
 
-!python copy_train-test.py -seed 266 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 266 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 20
 
-!python copy_train-test.py -seed 24 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 24 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 20
 
-!python copy_train-test.py -seed 144 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 40
+!python copy_train-test.py -seed 144 -data_path_train Data/Training/Token_Parent.csv -label_spec 'both' -EPOCHS 20
 
-!python copy_train-test.py -seed 42 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 42 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 20
 
-!python copy_train-test.py -seed 88 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 88 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 20
 
-!python copy_train-test.py -seed 266 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 266 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 20
 
-!python copy_train-test.py -seed 24 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 24 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 20
 
-!python copy_train-test.py -seed 144 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 40
+!python copy_train-test.py -seed 144 -data_path_train Data/Training/Token_Parent.csv -label_spec 'no' -EPOCHS 20
 
-!python copy_train-test.py -seed 42 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 42 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 20
 
-!python copy_train-test.py -seed 88 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 88 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 20
 
-!python copy_train-test.py -seed 266 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 266 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 20
 
-!python copy_train-test.py -seed 24 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 24 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 20
 
-!python copy_train-test.py -seed 144 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 40
+!python copy_train-test.py -seed 144 -data_path_train Data/Training/Token_Parent.csv -label_spec 'reg' -EPOCHS 20
 
-!python copy_train-test.py -seed 42 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 42 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 20
 
-!python copy_train-test.py -seed 88 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 88 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 20
 
-!python copy_train-test.py -seed 266 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 266 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 20
 
-!python copy_train-test.py -seed 24 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 24 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 20
 
-!python copy_train-test.py -seed 144 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 40
+!python copy_train-test.py -seed 144 -data_path_train Data/Training/Token_Parent.csv -label_spec 'vc' -EPOCHS 20
 
 ### 结束
 
