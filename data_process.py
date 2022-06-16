@@ -97,7 +97,7 @@ def process_data(args):
                                                        tf.cast(np.array(verb_pad_nonce), tf.int64)))
                                                     
     BUFFER_SIZE = 60
-    BATCH_SIZE = 32
+    BATCH_SIZE = args.BATCH_SIZE
     train_dataset = train_examples.cache()
     train_dataset = train_dataset.shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
     train_dataset = train_dataset.prefetch(BATCH_SIZE)
