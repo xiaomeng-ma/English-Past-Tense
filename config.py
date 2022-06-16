@@ -13,6 +13,8 @@ def get_args():
     parser.add_argument('-label_spec', type = str, default = 'reg', choices = ['reg', 'vc', 'both', 'no'], help = 'reg: regularity, vc: verb class, both: both, no: no label')
     ##EPOCHS
     parser.add_argument('-EPOCHS',type = int, default = 30, metavar ='N',help= 'number of EPOCHS')
+    ##BATCH_SIZE
+    parser.add_argument('-BATCH_SIZE', type = int, default = 32, metavar = 'N', help = 'batch size')
     ##top k
     parser.add_argument('-vk', type = int, default=5, help ='set k value')
     ##embedding
