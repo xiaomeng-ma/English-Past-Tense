@@ -1,2 +1,3 @@
-# No Copy Model
-## Train_token_reg
+要跑的都在Run里面
+你可以先跑带Copy的所有
+我
