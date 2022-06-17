@@ -6,9 +6,9 @@ def get_args():
     ##seed
     parser.add_argument('-seed', type = int, default = 1, help = "random seeds")
     ##data path
-    parser.add_argument('-data_path_train', type = str, default = 'Input_csv/Training/Train_type_reg.csv', help = 'training data path')
-    parser.add_argument('-data_path_test', type = str, default='Input_csv/Test.csv', help = 'test data path')
-    parser.add_argument('-data_path_nonce', type = str, default='Input_csv/Nonce.csv', help = 'nonce data path')
+    parser.add_argument('-data_path_train', type = str, default = 'Data/Training/Train_type_reg.csv', help = 'training data path')
+    parser.add_argument('-data_path_test', type = str, default='Data/Test/Test.csv', help = 'test data path')
+    parser.add_argument('-data_path_nonce', type = str, default='Data/Test/Nonce.csv', help = 'nonce data path')
     ##data label
     parser.add_argument('-label_spec', type = str, default = 'reg', choices = ['reg', 'vc', 'both', 'no'], help = 'reg: regularity, vc: verb class, both: both, no: no label')
     ##EPOCHS

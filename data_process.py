@@ -16,15 +16,16 @@ def to_char(row,col):
   return ",".join(row[col])
   
 def proc_data(args, df):
+    df.replace({'vowel change + t': 'vct', 'vowel change': 'vc', 'vowel change + d': 'vcd', 'level':'lvl', 'ruckumlaut': 'ruc', 'weak':'wk','other':'or'}, inplace = True)
     if args.label_spec == 'reg':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
-        df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + df['reg'] + ',' + 'END'
+        df['verb'] = 'START' + ',' + df['reg'] + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ','  + 'END'
     elif args.label_spec == 'vc':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
-        df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + df['verb class'] + ',' + 'END'
+        df['verb'] = 'START' + ',' + df['verb class'] + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END'
     elif args.label_spec == 'both':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
-        df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + df['reg'] + ',' + df['verb class'] + ',' + 'END'
+        df['verb'] = 'START' + ',' +  df['reg'] + ',' + df['verb class'] + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1)  + ','+ 'END'
     elif args.label_spec == 'no':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
         df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END'
@@ -35,13 +36,13 @@ def proc_data(args, df):
 def proc_data_nonce(args, df):
     if args.label_spec == 'reg':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
-        df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'reg' + ',' + 'END'
+        df['verb'] = 'START' + ',' + 'reg' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) +  ',' + 'END'
     elif args.label_spec == 'vc':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
-        df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + '-d' + ',' + 'END'
+        df['verb'] = 'START' + ',' + '-d' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) +  ',' + 'END'
     elif args.label_spec == 'both':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
-        df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'reg' + ',' + '-d' + ',' + 'END'
+        df['verb'] = 'START' + ',' + 'reg' + ',' + '-d' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END'
     elif args.label_spec == 'no':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
         df['verb'] = 'START' + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ',' + 'END'
