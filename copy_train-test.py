@@ -283,7 +283,7 @@ class Generate(object):
         return output_list
         
 class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
-  def __init__(self, d_model, warmup_steps=4000):
+  def __init__(self, d_model, warmup_steps=warmup):
     super(CustomSchedule, self).__init__()
     
     self.d_model = d_model
@@ -329,7 +329,7 @@ if __name__ == "__main__":
     accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
     metrics = [accuracy]
     callback = tf.keras.callbacks.EarlyStopping(monitor="loss", patience=10)
-    optimizer = tf.keras.optimizers.Adam(CustomSchedule(args.d_model), beta_1=0.9, beta_2=0.98,
+    optimizer = tf.keras.optimizers.Adam(CustomSchedule(args.d_model, args.warmup), beta_1=0.9, beta_2=0.98,
                                          epsilon=1e-9)
     loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction='none')
     train_loss = tf.keras.metrics.Mean(name='train_loss')
