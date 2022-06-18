@@ -225,7 +225,7 @@ class Generate(object):
         self.search = BeamSearch(args, self.pad_id, self.vocab_size)
         
     def load_model(self):
-        optimizer = tf.keras.optimizers.Adam(CustomSchedule(self.args.d_model), 
+        optimizer = tf.keras.optimizers.Adam(CustomSchedule(self.args.d_model, self.args.warmup), 
         beta_1=0.9, beta_2=0.98, epsilon=1e-9)
         checkpoint_path = self.args.model_path
         ckpt = tf.train.Checkpoint(transformer = self.model, optimizer = optimizer)
