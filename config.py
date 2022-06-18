@@ -19,6 +19,8 @@ def get_args():
     parser.add_argument('-vk', type = int, default=5, help ='set k value')
     ##embedding
     parser.add_argument('-embedding', type= str, default = 'Embedding/type_vectors')
+    ##Warm up step for learning rate
+    parser.agg_argument('-warmup', type = int, default = 4000, metavar = 'N', help = 'warm up steps for learning rate')
     #model setting
     parser.add_argument('-model_path', type = str, default = 'Checkpoints/', help = 'data path')
     parser.add_argument('-num_heads', type = int, default = 4, metavar = 'N', help = 'number of heads')
