@@ -16,7 +16,7 @@ def to_char(row,col):
   return ",".join(row[col])
   
 def proc_data(args, df):
-    df.replace({'vowel change + t': 'vct', 'vowel change': 'vc', 'vowel change + d': 'vcd', 'level':'lvl', 'ruckumlaut': 'ruc', 'weak':'wk','other':'or'}, inplace = True)
+    df.replace({'vowel change + t': 'vct', 'vowel change': 'vc', 'vowel change + d': 'vcd', 'level': 'lvl', 'ruckumlaut': 'ruc', 'weak':'wk', 'other':'or'}, inplace = True)
     if args.label_spec == 'reg':
         df['root'] = 'START' + ',' + df.apply(lambda row:to_char(row, 'ipa_root'), axis = 1) + ',' + 'END'
         df['verb'] = 'START' + ',' + df['reg'] + ',' + df.apply(lambda row: to_char(row, 'ipa_word'), axis = 1) + ','  + 'END'
@@ -63,7 +63,7 @@ def process_data(args):
       df_train['root'].values, df_train['label'].values, df_train['verb'].values, 
       test_size = 0.1, stratify=df_train[['label']], random_state=args.seed)
     t = Tokenizer(split = ',', filters = '!')
-    t.fit_on_texts(verb_train)
+    t.fit_on_texts(list(verb_train) + list(df_test['verb'].values))
     total_words = len(t.word_counts) + 1
     root_seq_train = t.texts_to_sequences(root_train)
     root_seq_val = t.texts_to_sequences(root_val)
