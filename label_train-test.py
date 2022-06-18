@@ -346,7 +346,8 @@ if __name__ == "__main__":
         dff = args.dff,
         input_vocab_size = vocab_num,
         target_vocab_size = vocab_num,
-        rate = args.dropout)
+        rate = args.dropout,
+        tokenizer = t)
     checkpoint_path = args.model_path
     ckpt = tf.train.Checkpoint(transformer = transformer, optimizer = optimizer)
     ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=1)
@@ -399,9 +400,28 @@ if __name__ == "__main__":
 
     test_pred_list = gen_model.forward(test_dataset)
     nonce_pred_list = gen_model.forward(nonce_dataset)
+    test_reg_acc_topk = df_top[df_top['reg']==b'Reg']['cor'].sum()/60
+    test_irr_acc_topk = df_top[df_top['reg']==b'Irreg']['cor'].sum()/20
+    
+    print('test_reg_acc_topk', test_reg_acc_topk)
+    print('test_irr_acc_tokp', test_irr_acc_topk)
+    
+    df_acc = pd.DataFrame([dev_reg_acc, dev_irr_acc, test_reg_acc, test_irr_acc, test_reg_acc_topk, test_irr_acc_topk]).T
+    df_acc.columns = ['dev_reg_acc', 'dev_irr_acc', 'test_reg_acc', 'test_irr_acc', 'test_reg_acc_topk', 'test_irr_acc_topk']
+        
+    df_acc.to_csv(os.path.join(args.model_path, 'dev_test_acc.csv'))
+    #df_dev_pred.to_csv(os.path.join(args.model_path, 'dev_pred.csv'))
+    df_test_pred.to_csv(os.path.join(args.model_path, 'test_pred.csv'))
+    df_nonce_pred.to_csv(os.path.join(args.model_path, 'nonce_pred.csv'))
+    pd.DataFrame(test_entropy_list).to_csv(os.path.join(args.model_path, 'test_entropy.csv'))
+    pd.DataFrame(nonce_entropy_list).to_csv(os.path.join(args.model_path, 'nonce_entropy.csv'))
+    
     
     def clean_topk(x, label):
-        end = x.index('end')
+        try:
+            end = x.index('end')
+        except:
+            end = len(x)
         if label == 'no':
             return "".join(x[:end])
         elif label == 'both':
@@ -428,26 +448,15 @@ if __name__ == "__main__":
             return 0
     df_top['cor'] = df_top.apply(lambda row: topk_correct(row), axis = 1)
     
-    test_reg_acc_topk = df_top[df_top['reg']==b'Reg']['cor'].sum()/60
-    test_irr_acc_topk = df_top[df_top['reg']==b'Irreg']['cor'].sum()/20
-    
-    print('test_reg_acc_topk', test_reg_acc_topk)
-    print('test_irr_acc_tokp', test_irr_acc_topk)
     
     for key in df_top_nonce.columns:
         df_top_nonce[key] = df_top_nonce[key].apply(lambda row: t.sequences_to_texts([row])[0].split(' ')[1:])
     for i in df_top_nonce.columns:
         df_top_nonce[i] = df_top_nonce[i].apply(lambda x: clean_topk(x, add))
         
-    df_acc = pd.DataFrame([dev_reg_acc, dev_irr_acc, test_reg_acc, test_irr_acc, test_reg_acc_topk, test_irr_acc_topk]).T
-    df_acc.columns = ['dev_reg_acc', 'dev_irr_acc', 'test_reg_acc', 'test_irr_acc', 'test_reg_acc_topk', 'test_irr_acc_topk']
+
 
     df_top.to_csv(os.path.join(args.model_path, 'test_top_k.csv'))
     df_top_nonce.to_csv(os.path.join(args.model_path, 'nonce_top_k.csv'))
-    df_acc.to_csv(os.path.join(args.model_path, 'dev_test_acc.csv'))
-    #df_dev_pred.to_csv(os.path.join(args.model_path, 'dev_pred.csv'))
-    df_test_pred.to_csv(os.path.join(args.model_path, 'test_pred.csv'))
-    df_nonce_pred.to_csv(os.path.join(args.model_path, 'nonce_pred.csv'))
-    pd.DataFrame(test_entropy_list).to_csv(os.path.join(args.model_path, 'test_entropy.csv'))
-    pd.DataFrame(nonce_entropy_list).to_csv(os.path.join(args.model_path, 'nonce_entropy.csv'))
+
 
