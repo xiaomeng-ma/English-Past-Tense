@@ -283,7 +283,7 @@ class Generate(object):
         return output_list
         
 class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
-  def __init__(self, d_model, warmup_steps=warmup):
+  def __init__(self, d_model, warmup_steps):
     super(CustomSchedule, self).__init__()
     
     self.d_model = d_model
