@@ -133,7 +133,7 @@ def test_step(test_dataset, model, t,add):
       if add == 'reg' or add =='vc':
         tar_a = "".join(t.sequences_to_texts([line_tar[2:index_tar]])[0].split(' '))
         out_a = "".join(t.sequences_to_texts([line_output[2:index_output]])[0].split(' '))
-      elif add == ['both']:
+      elif add == 'both':
         tar_a = "".join(t.sequences_to_texts([line_tar[3:index_tar]])[0].split(' '))
         out_a = "".join(t.sequences_to_texts([line_output[3:index_output]])[0].split(' '))
       else:
