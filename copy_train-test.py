@@ -397,24 +397,15 @@ if __name__ == "__main__":
     print('dev_irr_acc:', dev_irr_acc)
     print('test_reg_acc:', test_reg_acc)
     print('test_irr_acc:', test_irr_acc)
-
-    test_pred_list = gen_model.forward(test_dataset)
-    nonce_pred_list = gen_model.forward(nonce_dataset)
-    
-    test_reg_acc_topk = df_top[df_top['reg']==b'Reg']['cor'].sum()/60
-    test_irr_acc_topk = df_top[df_top['reg']==b'Irreg']['cor'].sum()/20
-    df_acc = pd.DataFrame([dev_reg_acc, dev_irr_acc, test_reg_acc, test_irr_acc, test_reg_acc_topk, test_irr_acc_topk]).T
-    df_acc.columns = ['dev_reg_acc', 'dev_irr_acc', 'test_reg_acc', 'test_irr_acc', 'test_reg_acc_topk', 'test_irr_acc_topk']
-    df_acc.to_csv(os.path.join(args.model_path, 'dev_test_acc.csv'))
-    print('test_reg_acc_topk', test_reg_acc_topk)
-    print('test_irr_acc_tokp', test_irr_acc_topk)
     
     #df_dev_pred.to_csv(os.path.join(args.model_path, 'dev_pred.csv'))
     df_test_pred.to_csv(os.path.join(args.model_path, 'test_pred.csv'))
     df_nonce_pred.to_csv(os.path.join(args.model_path, 'nonce_pred.csv'))
     pd.DataFrame(test_entropy_list).to_csv(os.path.join(args.model_path, 'test_entropy.csv'))
     pd.DataFrame(nonce_entropy_list).to_csv(os.path.join(args.model_path, 'nonce_entropy.csv'))
-
+    
+    test_pred_list = gen_model.forward(test_dataset)
+    nonce_pred_list = gen_model.forward(nonce_dataset)
     
     
     
@@ -454,10 +445,16 @@ if __name__ == "__main__":
         df_top_nonce[key] = df_top_nonce[key].apply(lambda row: t.sequences_to_texts([row])[0].split(' ')[1:])
     for i in df_top_nonce.columns:
         df_top_nonce[i] = df_top_nonce[i].apply(lambda x: clean_topk(x, add))
-        
 
+    
+    test_reg_acc_topk = df_top[df_top['reg']==b'Reg']['cor'].sum()/60
+    test_irr_acc_topk = df_top[df_top['reg']==b'Irreg']['cor'].sum()/20
+    df_acc = pd.DataFrame([dev_reg_acc, dev_irr_acc, test_reg_acc, test_irr_acc, test_reg_acc_topk, test_irr_acc_topk]).T
+    df_acc.columns = ['dev_reg_acc', 'dev_irr_acc', 'test_reg_acc', 'test_irr_acc', 'test_reg_acc_topk', 'test_irr_acc_topk']
+    df_acc.to_csv(os.path.join(args.model_path, 'dev_test_acc.csv'))
 
     df_top.to_csv(os.path.join(args.model_path, 'test_top_k.csv'))
     df_top_nonce.to_csv(os.path.join(args.model_path, 'nonce_top_k.csv'))
 
-
+    print('test_reg_acc_topk', test_reg_acc_topk)
+    print('test_irr_acc_tokp', test_irr_acc_topk)
