@@ -346,8 +346,7 @@ if __name__ == "__main__":
         dff = args.dff,
         input_vocab_size = vocab_num,
         target_vocab_size = vocab_num,
-        rate = args.dropout,
-        tokenizer = t)
+        rate = args.dropout)
     checkpoint_path = args.model_path
     ckpt = tf.train.Checkpoint(transformer = transformer, optimizer = optimizer)
     ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=1)
