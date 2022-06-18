@@ -219,7 +219,8 @@ class Generate(object):
             dff = args.dff,
             input_vocab_size = vocab_num,
             target_vocab_size = vocab_num,
-            rate = args.dropout)
+            rate = args.dropout, 
+            tokenizer = tokenizer)
         self.load_model()
         self.search = BeamSearch(args, self.pad_id, self.vocab_size)
         
