@@ -456,7 +456,7 @@ if __name__ == "__main__":
     test_irr_acc_top1 = df_top[df_top['reg']==b'Irreg']['cor1'].sum()/20   
     
     df_acc = pd.DataFrame([dev_reg_acc, dev_irr_acc, test_reg_acc, test_irr_acc, test_reg_acc_top1, test_irr_acc_top1, test_reg_acc_topk, test_irr_acc_topk]).T
-    df_acc.columns = ['dev_reg_acc', 'dev_irr_acc', 'test_reg_acc', 'test_irr_acc', 'test_reg_acc_top1', 'test_reg_irr_top1'', test_reg_acc_topk', 'test_irr_acc_topk']
+    df_acc.columns = ['dev_reg_acc', 'dev_irr_acc', 'test_reg_acc', 'test_irr_acc', 'test_reg_acc_top1', 'test_reg_irr_top1', 'test_reg_acc_topk', 'test_irr_acc_topk']
     df_acc.to_csv(os.path.join(args.model_path, 'dev_test_acc.csv'))
 
     df_top.to_csv(os.path.join(args.model_path, 'test_top_k.csv'))
