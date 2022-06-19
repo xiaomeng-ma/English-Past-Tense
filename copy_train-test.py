@@ -494,3 +494,6 @@ if __name__ == "__main__":
     irr_df_top.to_csv(os.path.join(args.model_path, 'irr/','test_top_k.csv'))
     irr_df_top_nonce.to_csv(os.path.join(args.model_path, 'irr/','nonce_top_k.csv'))
     irr_df_acc.to_csv(os.path.join(args.model_path, 'irr/','dev_test_acc.csv'))
+
+    print('test_reg_acc_topk', test_reg_acc_topk)
+    print('test_irr_acc_tokp', test_irr_acc_topk)

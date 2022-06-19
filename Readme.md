@@ -1,7 +1,11 @@
-要跑的都在Run里面
+warmup试一试
 
-你可以从前往后跑，我从后往前跑
+python label_train-test.py -seed 266 -data_path_train Data/Training/Train_type_reg.csv -label_spec vc -EPOCHS 30 -warmup 3000 -model_path Try_3000warmup/
 
-然后在跑的我在file前面加‘在跑’，跑完了再update一下‘跑完’
+python label_train-test.py -seed 266 -data_path_train Data/Training/Train_type_reg.csv -label_spec vc -EPOCHS 30 -warmup 2000 -model_path Try_2000warmup/
+
+python label_train-test.py -seed 266 -data_path_train Data/Training/Train_type_reg.csv -label_spec vc -EPOCHS 30 -warmup 3000 -model_path Try_1000warmup/
+
+
 
 
