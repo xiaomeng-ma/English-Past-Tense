@@ -42,26 +42,32 @@ def train_step(inp, tar):
     train_loss(loss)
     train_accuracy(accuracy_function(tar_real, predictions))
 
-def char_cor(row):
-    verb = row['ipa_word']
-    pred = row['pred']
-    len = min(row['pred_len'], row['tar_len'])
-    kk = 0
-    for i in range(len):
-        if verb[i] == pred[i]:
-            kk+=1
-    return kk
+def num2char (tar, end, output, add):
+    val_cor = []
+    for line_tar, line_output in zip(tar.tolist(), output.numpy().tolist()):
+        index_tar = line_tar.index(end)
+        try:
+            index_output = line_output.index(end)
+        except:
+            index_output = index_tar
+        output_all = ",".join(t.sequences_to_texts([line_output[1:index_output]])[0].split(' '))
+        if add == 'both':
+            tar_a = "".join(t.sequences_to_texts([line_tar[3:index_tar]])[0].split(' '))
+            out_a = "".join(t.sequences_to_texts([line_output[3:index_output]])[0].split(' '))
+        elif add == 'no':
+            tar_a = "".join(t.sequences_to_texts([line_tar[1:index_tar]])[0].split(' '))
+            out_a = "".join(t.sequences_to_texts([line_output[1:index_output]])[0].split(' '))
+        else:
+            tar_a = "".join(t.sequences_to_texts([line_tar[2:index_tar]])[0].split(' '))
+            out_a = "".join(t.sequences_to_texts([line_output[2:index_output]])[0].split(' '))                
+        val_cor.append([output_all, out_a, tar_a])
+    return val_cor
 
-def correct(row):
-    if row['ipa_word']==row['pred']:
-        k = 1
-    else:
-        k = 0
-    return k
 
 def dev_step(val_dataset, t, add):
     start, end = t.word_index['start'], t.word_index['end']
     val_cor_all = []
+    add = add
     for element in val_dataset.as_numpy_iterator():
         inp, tar = element['input_seq']
         label = element['label']
@@ -73,24 +79,9 @@ def dev_step(val_dataset, t, add):
             predictions = pred[:, -1:, :]
             predicted_id = tf.argmax(predictions,axis = -1)
             output = tf.concat(values = [output, predicted_id], axis = 1)
-        val_cor = []
-        for line_tar, line_output, lab in zip(tar.tolist(), output.numpy().tolist(), label.tolist()):
-            index_tar = line_tar.index(end)
-            try:
-                index_output = line_output.index(end)
-            except:
-                index_output = index_tar
-            output_all = ",".join(t.sequences_to_texts([line_output[1:index_output]])[0].split(' '))
-            if add == 'both':
-                tar_a = "".join(t.sequences_to_texts([line_tar[3:index_tar]])[0].split(' '))
-                out_a = "".join(t.sequences_to_texts([line_output[3:index_output]])[0].split(' '))
-            elif add == 'no':
-                tar_a = "".join(t.sequences_to_texts([line_tar[1:index_tar]])[0].split(' '))
-                out_a = "".join(t.sequences_to_texts([line_output[1:index_output]])[0].split(' '))
-            else:
-                tar_a = "".join(t.sequences_to_texts([line_tar[2:index_tar]])[0].split(' '))
-                out_a = "".join(t.sequences_to_texts([line_output[2:index_output]])[0].split(' '))                
-            val_cor.append([output_all, out_a, tar_a, lab])
+        val_cor = num2char(tar, end, output, add)
+        for i in range(len(val_cor)):
+            val_cor[i].append(label.tolist()[i])
         val_cor_all.append(val_cor)
     val_cor_all = list(itertools.chain(*val_cor_all))
     print('All val len:', len(val_cor_all))
@@ -106,10 +97,10 @@ def dev_step(val_dataset, t, add):
 def test_step(test_dataset, model, t,add):
   k = []
   start, end = 1, 2
+  add = add
   for element in test_dataset.as_numpy_iterator():
     inp, tar = element['input_seq']
     label = element['label']
-    output_list = []
     output = tar[:,:1]
     index_tar = np.where(tar==2)[0]
     entropy_list = []
@@ -121,25 +112,9 @@ def test_step(test_dataset, model, t,add):
       lprobs = tf.nn.log_softmax(predictions, axis = 2)
       entropy_list.append(entropy(np.exp(lprobs.numpy()),axis =2).ravel())
       output = tf.concat(values = [output, predicted_id], axis = 1)
-    output_list.append(output)
-    test_cor = []
-    for line_tar, line_output, lab in zip(tar.tolist(), output_list[0].numpy().tolist(), label.tolist()):
-      index_tar = line_tar.index(2)
-      try:
-        index_output = line_output.index(2)
-      except:
-        index_output = index_tar
-      output_all = ",".join(t.sequences_to_texts([line_output[1:index_output]])[0].split(' '))
-      if add == 'reg' or add =='vc':
-        tar_a = "".join(t.sequences_to_texts([line_tar[2:index_tar]])[0].split(' '))
-        out_a = "".join(t.sequences_to_texts([line_output[2:index_output]])[0].split(' '))
-      elif add == 'both':
-        tar_a = "".join(t.sequences_to_texts([line_tar[3:index_tar]])[0].split(' '))
-        out_a = "".join(t.sequences_to_texts([line_output[3:index_output]])[0].split(' '))
-      else:
-        tar_a = "".join(t.sequences_to_texts([line_tar[1:index_tar]])[0].split(' '))
-        out_a = "".join(t.sequences_to_texts([line_output[1:index_output]])[0].split(' '))
-      test_cor.append([output_all, out_a, tar_a, lab])
+    test_cor = num2char(tar, end, output, add)
+    for i in range(len(test_cor)):
+        test_cor[i].append(label.tolist()[i])
     df_test_cor = pd.DataFrame(test_cor, columns = ['pred_all', 'pred', 'tar','reg'])
     df_test_cor['cor'] = np.where((df_test_cor['pred']==df_test_cor['tar']), 1, 0)
     k.append(df_test_cor)
@@ -148,11 +123,11 @@ def test_step(test_dataset, model, t,add):
   Irreg = df_test_all[df_test_all['reg']==b'Irreg']
   Reg_cor = Reg['cor'].sum()/len(Reg)
   Irreg_cor = Irreg['cor'].sum()/len(Irreg)
-  print(Reg_cor, Irreg_cor)
   return Reg_cor, Irreg_cor, df_test_all, entropy_list 
     
 def nonce_step(nonce_dataset, model, t, add):
     start, end = t.word_index['start'], t.word_index['end']
+    add = add
     for (batch, (inp, tar)) in enumerate(nonce_dataset):
         output = tar[:,:1]
         entropy_list = []
@@ -164,24 +139,7 @@ def nonce_step(nonce_dataset, model, t, add):
             lprobs = tf.nn.log_softmax(predictions, axis = 2)
             entropy_list.append(entropy(np.exp(lprobs.numpy()), axis = 2).ravel())
             output = tf.concat(values = [output, predicted_id], axis = 1)
-        nonce_cor = []
-        for line_tar, line_output in zip(tar.numpy().tolist(), output.numpy().tolist()):
-            index_tar = line_tar.index(end)
-            try:
-                index_output = line_output.index(end)
-            except:
-                index_output = index_tar
-            output_all = ",".join(t.sequences_to_texts([line_output[1:index_output]])[0].split(' '))
-            if add == 'both':
-                tar_a = "".join(t.sequences_to_texts([line_tar[3:index_tar]])[0].split(' '))
-                out_a = "".join(t.sequences_to_texts([line_output[3:index_output]])[0].split(' '))
-            elif add == 'no':
-                tar_a = "".join(t.sequences_to_texts([line_tar[1:index_tar]])[0].split(' '))
-                out_a = "".join(t.sequences_to_texts([line_output[1:index_output]])[0].split(' '))
-            else:
-                tar_a = "".join(t.sequences_to_texts([line_tar[2:index_tar]])[0].split(' '))
-                out_a = "".join(t.sequences_to_texts([line_output[2:index_output]])[0].split(' '))  
-            nonce_cor.append([output_all, out_a, tar_a])
+        nonce_cor = num2char(tar.numpy(), end, output, add)
     df_nonce_cor = pd.DataFrame(nonce_cor, columns = ['pred_all','pred', 'tar'])
     return df_nonce_cor, entropy_list
     
@@ -207,10 +165,11 @@ class BeamSearch(nn.Module):
         return scores_buf, indices_buf, beams_buf
         
 class Generate(object):
-    def __init__(self, args, tokenizer):
+    def __init__(self, args, tokenizer, metric):
         self.args = args
         self.tokenizer = tokenizer
         self.pad_id = 0
+        self.metric = metric
         self.vocab_size = vocab_num
         self.model = Transformer(
             num_layers = args.nlayers,
@@ -219,13 +178,31 @@ class Generate(object):
             dff = args.dff,
             input_vocab_size = vocab_num,
             target_vocab_size = vocab_num,
-            rate = args.dropout, 
+            rate = args.dropout,
             tokenizer = tokenizer)
-        self.load_model()
+        if self.metric == 'irr':
+            self.load_model_irr()
+        else:
+            self.load_model()
         self.search = BeamSearch(args, self.pad_id, self.vocab_size)
         
+    def load_model_irr(self):
+        optimizer = tf.keras.optimizers.Adam(CustomSchedule(self.args.d_model, self.args.warmup), 
+        beta_1=0.9, beta_2=0.98, epsilon=1e-9)
+        checkpoint_path = self.args.model_path
+        ckpt = tf.train.Checkpoint(transformer = self.model, optimizer = optimizer)
+        irr_ckpt_manager = tf.train.CheckpointManager(ckpt, os.path.join(checkpoint_path, 'irr'), max_to_keep=1)
+        if irr_ckpt_manager.latest_checkpoint:
+            ckpt.restore(irr_ckpt_manager.latest_checkpoint).expect_partial()
+            status = ckpt.restore(irr_ckpt_manager.latest_checkpoint)
+            status.expect_partial()
+            print('Last irr checkpoint restored')
+        else:
+            assert ValueError ('No checkpoint')
+    
+    
     def load_model(self):
-        optimizer = tf.keras.optimizers.Adam(CustomSchedule(self.args.d_model), 
+        optimizer = tf.keras.optimizers.Adam(CustomSchedule(self.args.d_model, self.args.warmup), 
         beta_1=0.9, beta_2=0.98, epsilon=1e-9)
         checkpoint_path = self.args.model_path
         ckpt = tf.train.Checkpoint(transformer = self.model, optimizer = optimizer)
@@ -237,6 +214,7 @@ class Generate(object):
             print('Last checkpoint restored')
         else:
             assert ValueError ('No checkpoint')
+    
     def forward (self, test_dataset):
         output_list = []
         try:
@@ -283,7 +261,7 @@ class Generate(object):
         return output_list
         
 class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
-  def __init__(self, d_model, warmup_steps=4000):
+  def __init__(self, d_model, warmup_steps):
     super(CustomSchedule, self).__init__()
     
     self.d_model = d_model
@@ -329,7 +307,7 @@ if __name__ == "__main__":
     accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
     metrics = [accuracy]
     callback = tf.keras.callbacks.EarlyStopping(monitor="loss", patience=10)
-    optimizer = tf.keras.optimizers.Adam(CustomSchedule(args.d_model), beta_1=0.9, beta_2=0.98,
+    optimizer = tf.keras.optimizers.Adam(CustomSchedule(args.d_model, args.warmup), beta_1=0.9, beta_2=0.98,
                                          epsilon=1e-9)
     loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction='none')
     train_loss = tf.keras.metrics.Mean(name='train_loss')
@@ -374,7 +352,7 @@ if __name__ == "__main__":
             total_acc, dev_reg, dev_irreg, _ = dev_step(val_dataset, t, add)
             
             logging.info(f'Epoch {epoch + 1} Dev Acc {total_acc:.4f} Dev Reg {dev_reg:.4f} Dev Irreg {dev_irreg:.4f}')
-            dev_acc = total_acc
+            dev_acc = (dev_reg + dev_irreg)/2
             if dev_acc > best_dev_acc:
                 best_dev_acc = dev_acc
                 best_epoch = epoch + 1
@@ -387,26 +365,42 @@ if __name__ == "__main__":
                 logging.info(f'Saving best irreg model for epoch {epoch + 1} at {ckpt_save_path}')
             logging.info(f'Time taken for 1 epoch: {time.time() - start:.2f} secs\n')
             
-    gen_model = Generate(args, t)
+    gen_model = Generate(args, t, 'mean')
     dev_reg_acc, dev_irr_acc , _, _ = test_step(val_dataset, gen_model.model, t, add)
     test_reg_acc, test_irr_acc, df_test_pred, test_entropy_list = test_step(test_dataset, gen_model.model,t, add)
     df_nonce_pred, nonce_entropy_list = nonce_step(nonce_dataset, gen_model.model, t, add)
     
-    
+    irr_gen_model = Generate(args, t, 'irr')
+    irr_dev_reg_acc, irr_dev_irr_acc , _, _ = test_step(val_dataset, irr_gen_model.model, t, add)
+    irr_test_reg_acc, irr_test_irr_acc, irr_df_test_pred, irr_test_entropy_list = test_step(test_dataset, irr_gen_model.model,t, add)
+    irr_df_nonce_pred, irr_nonce_entropy_list = nonce_step(nonce_dataset, irr_gen_model.model, t, add)
     
     print('dev_reg_acc:', dev_reg_acc)
     print('dev_irr_acc:', dev_irr_acc)
     print('test_reg_acc:', test_reg_acc)
     print('test_irr_acc:', test_irr_acc)
     
-    #df_dev_pred.to_csv(os.path.join(args.model_path, 'dev_pred.csv'))
+        
+    print('irr_dev_reg_acc:', irr_dev_reg_acc)
+    print('irr_dev_irr_acc:', irr_dev_irr_acc)
+    print('irr_test_reg_acc:', irr_test_reg_acc)
+    print('irr_test_irr_acc:', irr_test_irr_acc)
+    
     df_test_pred.to_csv(os.path.join(args.model_path, 'test_pred.csv'))
     df_nonce_pred.to_csv(os.path.join(args.model_path, 'nonce_pred.csv'))
     pd.DataFrame(test_entropy_list).to_csv(os.path.join(args.model_path, 'test_entropy.csv'))
     pd.DataFrame(nonce_entropy_list).to_csv(os.path.join(args.model_path, 'nonce_entropy.csv'))
-    
+
+    irr_df_test_pred.to_csv(os.path.join(args.model_path, 'irr/', 'test_pred.csv'))
+    irr_df_nonce_pred.to_csv(os.path.join(args.model_path, 'irr/', 'nonce_pred.csv'))
+    pd.DataFrame(irr_test_entropy_list).to_csv(os.path.join(args.model_path, 'irr/', 'test_entropy.csv'))
+    pd.DataFrame(irr_nonce_entropy_list).to_csv(os.path.join(args.model_path, 'irr/', 'nonce_entropy.csv'))
+
     test_pred_list = gen_model.forward(test_dataset)
     nonce_pred_list = gen_model.forward(nonce_dataset)
+    
+    irr_test_pred_list = irr_gen_model.forward(test_dataset)
+    irr_nonce_pred_list = irr_gen_model.forward(nonce_dataset)
     
     
     
@@ -424,6 +418,10 @@ if __name__ == "__main__":
     
     df_top = pd.DataFrame(test_pred_list.numpy().tolist()).transpose()
     df_top_nonce = pd.DataFrame(nonce_pred_list.numpy().tolist()).transpose()
+    
+    irr_df_top = pd.DataFrame(irr_test_pred_list.numpy().tolist()).transpose()
+    irr_df_top_nonce = pd.DataFrame(irr_nonce_pred_list.numpy().tolist()).transpose()
+    
     for key in df_top.columns:
         df_top[key] = df_top[key].apply(lambda row: t.sequences_to_texts([row])[0].split(' ')[1:])
     for i in df_top.columns:
@@ -432,6 +430,15 @@ if __name__ == "__main__":
     df_top['original_pred'] = df_test_pred['pred'].reset_index(drop=True)
     df_top['reg'] = df_test_pred['reg'].reset_index(drop=True)
     
+    for key in irr_df_top.columns:
+        irr_df_top[key] = irr_df_top[key].apply(lambda row: t.sequences_to_texts([row])[0].split(' ')[1:])
+    for i in irr_df_top.columns:
+        irr_df_top[i] = irr_df_top[i].apply(lambda x: clean_topk(x, add))
+        
+    irr_df_top['target'] = irr_df_test_pred['tar'].reset_index(drop=True)
+    irr_df_top['original_pred'] = irr_df_test_pred['pred'].reset_index(drop=True)
+    irr_df_top['reg'] = irr_df_test_pred['reg'].reset_index(drop=True)
+    
     def topk_correct(row):
         cor = row['target'] 
         l = [row[col] for col in range(0,5)]
@@ -439,28 +446,51 @@ if __name__ == "__main__":
             return 1
         else:
             return 0
-      
     df_top['cor'] = df_top.apply(lambda row: topk_correct(row), axis = 1)
     df_top['cor1'] = np.where((df_top[0] == df_top['target']), 1, 0)
- 
     
-    for key in df_top_nonce.columns:
-        df_top_nonce[key] = df_top_nonce[key].apply(lambda row: t.sequences_to_texts([row])[0].split(' ')[1:])
-    for i in df_top_nonce.columns:
-        df_top_nonce[i] = df_top_nonce[i].apply(lambda x: clean_topk(x, add))
+    irr_df_top['cor'] = irr_df_top.apply(lambda row: topk_correct(row), axis = 1)
+    irr_df_top['cor1'] = np.where((irr_df_top[0] == irr_df_top['target']), 1, 0)
 
     
     test_reg_acc_topk = df_top[df_top['reg']==b'Reg']['cor'].sum()/60
     test_irr_acc_topk = df_top[df_top['reg']==b'Irreg']['cor'].sum()/20
     test_reg_acc_top1 = df_top[df_top['reg']==b'Reg']['cor1'].sum()/60
-    test_irr_acc_top1 = df_top[df_top['reg']==b'Irreg']['cor1'].sum()/20   
+    test_irr_acc_top1 = df_top[df_top['reg']==b'Irreg']['cor1'].sum()/20 
     
+    irr_test_reg_acc_topk = irr_df_top[irr_df_top['reg']==b'Reg']['cor'].sum()/60
+    irr_test_irr_acc_topk = irr_df_top[irr_df_top['reg']==b'Irreg']['cor'].sum()/20
+    irr_test_reg_acc_top1 = irr_df_top[irr_df_top['reg']==b'Reg']['cor1'].sum()/60
+    irr_test_irr_acc_top1 = irr_df_top[irr_df_top['reg']==b'Irreg']['cor1'].sum()/20 
+    
+    print('test_reg_acc_topk', test_reg_acc_topk)
+    print('test_irr_acc_tokp', test_irr_acc_topk)
+    
+    print('irr_test_reg_acc_topk', irr_test_reg_acc_topk)
+    print('irr_test_irr_acc_tokp', irr_test_irr_acc_topk)
+    
+    
+    for key in df_top_nonce.columns:
+        df_top_nonce[key] = df_top_nonce[key].apply(lambda row: t.sequences_to_texts([row])[0].split(' ')[1:])
+    for i in df_top_nonce.columns:
+        df_top_nonce[i] = df_top_nonce[i].apply(lambda x: clean_topk(x, add))
+        
+    for key in irr_df_top_nonce.columns:
+        irr_df_top_nonce[key] = irr_df_top_nonce[key].apply(lambda row: t.sequences_to_texts([row])[0].split(' ')[1:])
+    for i in irr_df_top_nonce.columns:
+        irr_df_top_nonce[i] = irr_df_top_nonce[i].apply(lambda x: clean_topk(x, add))
+        
     df_acc = pd.DataFrame([dev_reg_acc, dev_irr_acc, test_reg_acc, test_irr_acc, test_reg_acc_top1, test_irr_acc_top1, test_reg_acc_topk, test_irr_acc_topk]).T
     df_acc.columns = ['dev_reg_acc', 'dev_irr_acc', 'test_reg_acc', 'test_irr_acc', 'test_reg_acc_top1', 'test_reg_irr_top1', 'test_reg_acc_topk', 'test_irr_acc_topk']
-    df_acc.to_csv(os.path.join(args.model_path, 'dev_test_acc.csv'))
+    
+    irr_df_acc = pd.DataFrame([irr_dev_reg_acc, irr_dev_irr_acc, irr_test_reg_acc, irr_test_irr_acc, irr_test_reg_acc_top1, irr_test_irr_acc_top1, irr_test_reg_acc_topk, irr_test_irr_acc_topk]).T
+    irr_df_acc.columns = ['irr_dev_reg_acc', 'irr_dev_irr_acc', 'irr_test_reg_acc', 'irr_test_irr_acc', 'irr_test_reg_acc_top1', 'irr_test_reg_irr_top1', 'irr_test_reg_acc_topk', 'irr_test_irr_acc_topk']
 
     df_top.to_csv(os.path.join(args.model_path, 'test_top_k.csv'))
     df_top_nonce.to_csv(os.path.join(args.model_path, 'nonce_top_k.csv'))
+    df_acc.to_csv(os.path.join(args.model_path, 'dev_test_acc.csv'))
+    #df_dev_pred.to_csv(os.path.join(args.model_path, 'dev_pred.csv'))
 
-    print('test_reg_acc_topk', test_reg_acc_topk)
-    print('test_irr_acc_tokp', test_irr_acc_topk)
+    irr_df_top.to_csv(os.path.join(args.model_path, 'irr/','test_top_k.csv'))
+    irr_df_top_nonce.to_csv(os.path.join(args.model_path, 'irr/','nonce_top_k.csv'))
+    irr_df_acc.to_csv(os.path.join(args.model_path, 'irr/','dev_test_acc.csv'))
