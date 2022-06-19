@@ -374,7 +374,7 @@ if __name__ == "__main__":
                 best_epoch = epoch + 1
                 ckpt_save_path = ckpt_manager.save()
                 logging.info(f'Saving best model for epoch {epoch + 1} at {ckpt_save_path}')
-            if dev_irreg > best_irr_dev_acc:
+            if dev_irreg >= best_irr_dev_acc:
                 best_irr_dev_acc = dev_irreg
                 best_irr_epoch = epoch + 1
                 ckpt_save_path = irr_ckpt_manager.save()
