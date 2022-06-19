@@ -1,10 +1,9 @@
-warmup试一试
+4, 10 Train_token_reg  batch size = 128 可能比较大跑不出来
 
-python label_train-test.py -seed 266 -data_path_train Data/Training/Train_type_reg.csv -label_spec vc -EPOCHS 30 -warmup 3000 -model_path Try_3000warmup/
+5, 11 Train_token_irr batch size = 64 也比较大，不知道能不能跑
 
-python label_train-test.py -seed 266 -data_path_train Data/Training/Train_type_reg.csv -label_spec vc -EPOCHS 30 -warmup 2000 -model_path Try_2000warmup/
+1，2，3，6，7，8，9，12 应该都能正常跑
 
-python label_train-test.py -seed 266 -data_path_train Data/Training/Train_type_reg.csv -label_spec vc -EPOCHS 30 -warmup 3000 -model_path Try_1000warmup/
 
 
 
