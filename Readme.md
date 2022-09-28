@@ -1,8 +1,11 @@
-4, 10 Train_token_reg  batch size = 128 可能比较大跑不出来
+#How Do We Get There
 
-5, 11 Train_token_irr batch size = 64 也比较大，不知道能不能跑
+Hi! This is the companion repository for:
+Xiaomeng Ma and Lingyu Gao. How do we get there? Evaluating transformer neural networks as cognitive models for English past tense inflection. to appear at AACL-IJNLP 2022.
 
-1，2，3，6，7，8，9，12 应该都能正常跑
+If you have any questions, please feel free to reach out to the Xiaomeng Ma at xm2158@tc.columbia.edu. 
+
+##
 
 
 
