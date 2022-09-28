@@ -8,3 +8,4 @@ The cleaned up data is in 4039_ALL.csv, which contains all the verbs and its IPA
 **Training** folder contains the four training datasets used in the paper. **Test** folder contains the real English verbs (Test.csv) and nonce verbs (Nonce.csv) used in the paper. 
 
 
+**HumanNonceData** contains the human speaker's production probability for the regular and irregular forms for each nonce verb. The file is adopted from Albright and Hayes (2003). This data was used to compute the correlation between model's production probability and the human's production probability. 
